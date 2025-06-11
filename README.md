@@ -42,5 +42,5 @@ A web-based platform for users to explore, review, and rate electronic products.
 ### 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/electronic-review-app.git
+git clone https://github.com/Vyshna2000//electronic-review-app.git
 cd electronic-review-app
