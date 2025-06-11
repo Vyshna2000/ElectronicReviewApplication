@@ -1,0 +1,31 @@
+from django.urls import path,include
+from . import views
+
+urlpatterns = [
+    path('login', views.login_view, name='login'),
+    path('signin', views.signin, name='signin'),
+    path('logout', views.logout_view, name='logout'),
+    path('dashboard', views.dashboard, name='dashboard'),
+    path('product_reviews',views.product_reviews,name='product_reviews'),
+    path('signup',views.signup,name='signup'),
+    path('product/<int:pk>/', views.product_detail, name='product_detail'),
+    path('add_review/<int:id>',views.add_review,name='add_review'),
+    path('review_react/',views.review_react,name='review_react'),
+    path('admin_login',views.admin_login, name='admin_login'),
+    path('admin_dashboard',views.admin_dashboard,name='admin_dashboard'),
+    path('add_product',views.add_product,name='add_product'),
+    path('add_category',views.add_category,name='add_category'),
+    path('product_add',views.product_add, name='product_add'),
+    path('category_add',views.category_add,name='category_add'),
+    path('',views.index,name='index'),
+    path('edit_review/<int:review_id>/', views.edit_review, name='edit_review'),
+    path('edit_product/<int:id>/',views.edit_product,name="edit_product"),
+    path('delete_comment<int:id>/',views.delete_comment,name='delete_comment'),
+    path('delete_prodcuct<int:id>/',views.delete_product,name='delete_product'),
+    path('search',views.search,name='search'),
+    path('auth/', include('social_django.urls', namespace='social')),
+    path('forgot-password/', views.forgot_password_view, name='forgot_password'),
+    path('verify-otp/', views.verify_otp_view, name='verify_otp'),
+    path('reset-password/', views.reset_password_view, name='reset_password'),
+     path('error/', views.auth_error_view, name='auth_error'),
+]

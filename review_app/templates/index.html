@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ElecReview - Electronic Review App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(-45deg, #93c5fd, #a7f3d0, #e0e7ff, #f0fdfa);
+      background-size: 400% 400%;
+      animation: gradientBG 12s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+  </style>
+</head>
+<body class="font-sans min-h-screen flex flex-col justify-between">
+
+  <!-- Header -->
+  <header class="text-white text-center py-16 bg-gradient-to-br from-blue-500 to-green-400 shadow-lg">
+    <h1 class="text-5xl font-extrabold mb-2">ElecReview</h1>
+    <p class="text-lg opacity-90">Discover. Review. Decide. The Smart Way to Choose Electronics.</p>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="flex flex-col md:flex-row items-center justify-center text-center md:text-left px-6 py-16 gap-10 bg-white/30 backdrop-blur-md mx-6 my-10 rounded-3xl shadow-xl">
+    <div class="max-w-lg">
+      <p class="text-xl text-gray-800 leading-relaxed mb-6">
+        Welcome to <strong>ElecReview</strong> – your trusted platform for honest reviews of the latest gadgets, smartphones,
+        laptops, and tech accessories. Compare user feedback, ratings, and expert insights before making your next purchase.
+      </p>
+      <a href="{% url 'login' %}" class="inline-block bg-gradient-to-r from-blue-600 to-green-500 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:from-blue-700 hover:to-green-600 transition duration-300">
+        Login & Start Reviewing
+      </a>
+    </div>
+    {% load static %}
+    <img src="{% static 'star.jpg' %}" alt="Reviewing electronics" class="w-96 rounded-2xl shadow-lg" />
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gradient-to-tr from-gray-900 to-gray-800 text-white text-center py-5 mt-auto">
+    &copy; 2025 ElecReview. All rights reserved.
+  </footer>
+
+</body>
+</html>

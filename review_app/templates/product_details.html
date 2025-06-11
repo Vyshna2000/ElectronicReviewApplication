@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>{{ product.name }} - Details</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f5f7fa;
+    }
+
+    .product-image {
+      width: 100%;
+      border-radius: 0.75rem;
+      object-fit: cover;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .review-box {
+      background-color: #ffffff;
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+      padding: 2rem;
+    }
+
+    .review-form {
+      background-color: #f8f9fc;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      border: 1px solid #dee2e6;
+    }
+
+    .review-rating {
+      color: #ffc107;
+    }
+
+    .review-item {
+      border: 1px solid #dee2e6;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      transition: background-color 0.3s;
+    }
+
+    .review-item:hover {
+      background-color: #f8f9fc;
+    }
+
+    .btn-outline-success,
+    .btn-outline-danger {
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  {% include 'navbar.html' %}
+  <div class="container my-5">
+    <div class="row g-5">
+      <!-- Left: Product Image -->
+      <div class="col-md-6">
+        {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+        {% endif %}
+      </div>
+
+      <!-- Right: Product Info and Reviews -->
+      <div class="col-md-6">
+        <div class="review-box">
+          <h2 class="fw-bold">{{ product.name }}</h2>
+          {% if request.user.is_superuser %}
+          <a href="{% url 'edit_product' product.id %}" class="edit-review-btn ms-2" title="Edit Review">
+            <i class="bi bi-pencil-fill text-dark"></i>
+          </a>
+
+          <!-- Delete Product Button -->
+          <form method="POST" action="{% url 'delete_product' product.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-link p-0 ms-2 text-danger"
+              onclick="return confirm('Are you sure you want to delete this product?');" title="Delete Product">
+              <i class="bi bi-trash-fill"></i>
+            </button>
+          </form>
+
+          {% endif %}
+
+          <p class="text-muted mb-1"><strong>Brand:</strong> {{ product.brand }}</p>
+          <p class="text-primary h5">₹{{ product.price }}</p>
+          <p class="mt-3">{{ product.description }}</p>
+          <div class="mt-auto">
+            <span class="rating-badge">
+              <i class="fas fa-star"></i> {{ product.average_rating|default:"0" }}/5
+            </span>
+            <small class="text-muted ms-2">({{ product.total_reviews|default:"0" }} reviews)</small>
+          </div>
+          <hr>
+
+          <h5 class="mt-4 mb-3">Reviews ({{ product.total_reviews }})</h5>
+
+          {% for r in reviews %}
+          <div class="review-item mb-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <strong>{{ r.user.username }}</strong>
+              <span class="review-rating">{{ r.rating }} <i class="bi bi-star-fill"></i></span>
+            </div>
+            <p class="mb-1">
+              {{ r.comment }}
+
+              {% if user == r.user %}
+              <!-- Edit Review Button -->
+              <a href="{% url 'edit_review' r.id %}" class="edit-review-btn ms-2" title="Edit Review">
+                <i class="bi bi-pencil-fill text-dark"></i>
+              </a>
+
+              <!-- Delete Product Button -->
+              <a href="{% url 'delete_comment' r.id %}" class="delete-product-btn ms-2 text-danger"
+                onclick="return confirm('Are you sure you want to delete this product?');" title="Delete Product">
+                <i class="bi bi-trash-fill"></i>
+              </a>
+              {% endif %}
+            </p>
+
+
+            {% if user.is_authenticated and not user.is_superuser %}
+            <div>
+              <button class="btn btn-sm btn-outline-success react" data-review="{{ r.id }}" data-action="like">
+                👍 <span class="like-count">{{ r.total_likes }}</span>
+              </button>
+              <button class="btn btn-sm btn-outline-danger react" data-review="{{ r.id }}" data-action="dislike">
+                👎 <span class="dislike-count">{{ r.total_dislikes }}</span>
+              </button>
+            </div>
+            {% endif %}
+          </div>
+          {% empty %}
+          <p class="text-muted">No reviews yet.</p>
+          {% endfor %}
+
+          {% if user_review %}
+          <div class="alert alert-info mt-4">You already reviewed this product.</div>
+          {% elif user.is_authenticated and not user.is_superuser %}
+          <div class="review-form mt-5">
+            <h6 class="mb-3">Add your review</h6>
+            <form method="post" action="{% url 'add_review' product.id %}">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="comment" class="form-label">Your Comment</label>
+                <textarea id="comment" name="comment" rows="3" class="form-control"
+                  placeholder="Write your review here..." required></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="rating" class="form-label">Rating</label>
+                <select id="rating" name="rating" class="form-select" required>
+                  {% for i in "12345" %}
+                  <option value="{{ i }}" {% if review.rating|stringformat:"s"==i %}selected{% endif %}>
+                    {{ i }} ★{% if i == "5" %} (Excellent){% elif i == "4" %} (Good){% elif i == "3" %} (Average){% elif
+                    i == "2" %} (Poor){% else %} (Terrible){% endif %}
+                  </option>
+                  {% endfor %}
+                </select>
+                </select>
+              </div>
+
+              <button type="submit" class="btn btn-primary">Submit Review</button>
+            </form>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery + AJAX Reaction Script -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(".react").click(function () {
+      const btn = $(this);
+      $.post("{% url 'review_react' %}", {
+        csrfmiddlewaretoken: "{{ csrf_token|escapejs }}",
+        review_id: btn.data("review"),
+        action: btn.data("action")
+      }, function (data) {
+        const container = btn.closest(".review-item");
+        container.find(".like-count").text(data.likes);
+        container.find(".dislike-count").text(data.dislikes);
+      });
+    });
+  </script>
+</body>
+
+</html>
