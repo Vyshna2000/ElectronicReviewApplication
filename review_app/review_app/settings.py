@@ -4,6 +4,14 @@ Django settings for review_app project.
 
 from pathlib import Path
 import os
+import os
+from dotenv import load_dotenv
+from pathlib import Path
+
+# Load environment variables
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(dotenv_path=BASE_DIR / '.env')
+
 
 # Build paths
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -100,8 +108,11 @@ LOGIN_REDIRECT_URL = 'dashboard'  # Change to your desired redirect
 LOGOUT_REDIRECT_URL = '/'
 
 # Google OAuth2 Configuration
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '227090530360-aldi29qta3kqfkp9n2q1trnch0p6rlej.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv("GOOGLE_CLIENT_ID")
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+
+
+
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 # Additional Google OAuth2 settings
@@ -173,3 +184,4 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
     messages.SUCCESS: 'success',
 }
+
