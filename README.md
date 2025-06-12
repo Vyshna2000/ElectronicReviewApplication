@@ -32,7 +32,6 @@ A web-based platform for users to explore, review, and rate electronic products.
   - Product categories
   - Customer reviews
   - User accounts
-- Review moderation (edit/delete)
 - Product management (add/edit/delete)
 
 ---
